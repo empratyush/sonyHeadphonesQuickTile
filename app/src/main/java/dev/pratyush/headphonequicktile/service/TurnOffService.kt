@@ -58,29 +58,28 @@ class TurnOffService : Service() {
     }
 
     private fun tryTurningOffDevice() {
+        var connectedDevice = getConnectedDevice()
 
         try {
-            var connectedDevice = getConnectedDevice()
             var roundCount = 0
 
             while (connectedDevice != null && connectedDevice.isConnected && roundCount < 20) {
                 roundCount++
                 turnOffBTDeviceNow(connectedDevice)
                 connectedDevice = getConnectedDevice()
-                Thread.sleep(1000)
+                Thread.sleep(200)
             }
-
-            if (connectedDevice == null || !connectedDevice.isConnected) {
-                val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-                mBluetoothAdapter.disable()
-            }
-            stopSelf()
         } catch (e: IOException) {
             e.fillInStackTrace()
         } catch (e: InterruptedException) {
             e.fillInStackTrace()
         }
-
+        Thread.sleep(4000)
+        if (connectedDevice == null || !connectedDevice.isConnected) {
+            val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            mBluetoothAdapter.disable()
+        }
+        stopSelf()
     }
 
     private fun createNotificationChannel(): String {
