@@ -1,0 +1,11 @@
+<resources>
+
+    <!--Final, top-level theme-->
+    <style name="Theme.SonyPowerOffQuickTile.DayNight" parent="Theme.SonyPowerOffQuickTile" />
+
+    <style name="Theme.SonyPowerOffQuickTile" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

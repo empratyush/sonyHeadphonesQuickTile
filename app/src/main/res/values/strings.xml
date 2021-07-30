@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Sony PowerOff Quick Tile</string>
+
+    <string name="tile_name">Turn Off</string>
+</resources>

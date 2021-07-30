@@ -1,0 +1,9 @@
+<resources>
+
+    <style name="Theme.SonyPowerOffQuickTile.DayNight" parent="Theme.SonyPowerOffQuickTile.Dark" />
+
+    <!--Only override the attribute that actually need to be changed -->
+    <style name="Theme.SonyPowerOffQuickTile.Dark" parent="Theme.SonyPowerOffQuickTile">
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>
