@@ -1,4 +1,4 @@
-package dev.pratyush.headphonequicktile
+package dev.pratyush.headphonequicktile.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,6 +10,10 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.graphics.drawable.IconCompat
+import dev.pratyush.headphonequicktile.R
+import dev.pratyush.headphonequicktile.powerOff
+import dev.pratyush.headphonequicktile.uuid
+import dev.pratyush.headphonequicktile.uuidAlt
 import java.io.IOException
 import java.util.*
 

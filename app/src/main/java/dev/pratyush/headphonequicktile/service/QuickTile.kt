@@ -1,4 +1,4 @@
-package dev.pratyush.headphonequicktile
+package dev.pratyush.headphonequicktile.service
 
 import android.bluetooth.BluetoothAdapter
 import android.content.Context

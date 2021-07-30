@@ -14,14 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SonyPowerOffQuickTile.DayNight">
 
-        <activity android:name=".ConfigActivity">
+        <activity android:name=".ui.ConfigActivity">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
             </intent-filter>
         </activity>
 
         <service
-            android:name=".QuickTile"
+            android:name=".service.QuickTile"
             android:icon="@drawable/ic_headset"
             android:label="@string/tile_name"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
@@ -31,7 +31,7 @@
         </service>
 
         <service
-            android:name=".TurnOffService"
+            android:name=".service.TurnOffService"
             android:exported="false"
             android:foregroundServiceType="connectedDevice" />
 
