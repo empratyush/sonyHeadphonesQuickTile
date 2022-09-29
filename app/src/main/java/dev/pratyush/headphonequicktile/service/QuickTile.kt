@@ -7,6 +7,8 @@ import android.content.IntentFilter
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.core.content.ContextCompat
+import dev.pratyush.headphonequicktile.service.TurnOffService.Companion.getConnectedDevice
+import dev.pratyush.headphonequicktile.service.TurnOffService.Companion.isConnected
 
 class QuickTile : TileService() {
 
@@ -33,9 +35,9 @@ class QuickTile : TileService() {
     }
 
     private fun updateTile() {
-        TurnOffService.getConnectedDevice().let { device ->
+        getConnectedDevice().let { device ->
             when {
-                device != null && device.isConnected -> {
+                device != null && device.isConnected() -> {
                     qsTile.label = "Turn Off " + device.name
                     qsTile.state = Tile.STATE_ACTIVE
                 }

@@ -5,6 +5,9 @@ import android.app.NotificationManager
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
+import android.bluetooth.BluetoothProfile
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
@@ -15,19 +18,18 @@ import dev.pratyush.headphonequicktile.powerOff
 import dev.pratyush.headphonequicktile.uuid
 import dev.pratyush.headphonequicktile.uuidAlt
 import java.io.IOException
-import java.util.*
+import java.util.Date
 
 
 class TurnOffService : Service() {
 
     companion object {
-        fun getConnectedDevice(): BluetoothDevice? {
-
-            var headset: BluetoothDevice? = null
-            val adapter = BluetoothAdapter.getDefaultAdapter()
-
-            val devices = adapter.bondedDevices
-            for (device in devices) {
+        fun Context.getConnectedDevice(): BluetoothDevice? {
+            val bluetoothManager = getSystemService(BluetoothManager::class.java)
+            val connectedDevice = bluetoothManager.getConnectedDevices(BluetoothProfile.HEADSET)
+            var headset : BluetoothDevice? = null
+            for (device in connectedDevice) {
+                if (!device.isConnected()) continue
                 val uuids = device.uuids ?: continue
                 for (u in uuids) {
                     if (u.toString() == uuid.toString() || u.toString() == uuidAlt.toString()) {
@@ -38,6 +40,12 @@ class TurnOffService : Service() {
                 if (headset != null) break
             }
             return headset
+        }
+
+        fun BluetoothDevice.isConnected() : Boolean {
+            val method = this.javaClass.getMethod("isConnected")
+            val isConnected = method.invoke(this)
+            return isConnected == true
         }
     }
 
@@ -62,8 +70,7 @@ class TurnOffService : Service() {
 
         try {
             var roundCount = 0
-
-            while (connectedDevice != null && connectedDevice.isConnected && roundCount < 20) {
+            while (connectedDevice != null && connectedDevice.isConnected() && roundCount < 20) {
                 roundCount++
                 turnOffBTDeviceNow(connectedDevice)
                 connectedDevice = getConnectedDevice()
@@ -75,7 +82,7 @@ class TurnOffService : Service() {
             e.fillInStackTrace()
         }
         Thread.sleep(4000)
-        if (connectedDevice == null || !connectedDevice.isConnected) {
+        if (connectedDevice == null || !connectedDevice.isConnected()) {
             val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
             mBluetoothAdapter.disable()
         }
@@ -105,7 +112,7 @@ class TurnOffService : Service() {
 
     @Throws(IOException::class, InterruptedException::class)
     private fun turnOffBTDeviceNow(sonyHeadphone: BluetoothDevice) {
-        if (!sonyHeadphone.isConnected) return
+        if (!sonyHeadphone.isConnected()) return
         val sonyHeadphoneSocket = sonyHeadphone.createRfcommSocketToServiceRecord(uuid)
         sonyHeadphoneSocket?.use { socket ->
             socket.connect()
@@ -132,6 +139,4 @@ class TurnOffService : Service() {
         }
         stopSelf()
     }
-
-
 }
