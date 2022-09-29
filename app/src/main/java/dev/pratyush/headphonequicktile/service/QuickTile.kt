@@ -1,14 +1,19 @@
 package dev.pratyush.headphonequicktile.service
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import dev.pratyush.headphonequicktile.service.TurnOffService.Companion.getConnectedDevice
-import dev.pratyush.headphonequicktile.service.TurnOffService.Companion.isConnected
+import dev.pratyush.headphonequicktile.ktx.getConnectedDevice
+import dev.pratyush.headphonequicktile.ktx.isBtOn
+import dev.pratyush.headphonequicktile.ktx.isConnected
+import dev.pratyush.headphonequicktile.ui.ConfigActivity
 
 class QuickTile : TileService() {
 
@@ -35,6 +40,15 @@ class QuickTile : TileService() {
     }
 
     private fun updateTile() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            qsTile.label = "Configure"
+            qsTile.state = Tile.STATE_INACTIVE
+            return
+        }
         getConnectedDevice().let { device ->
             when {
                 device != null && device.isConnected() -> {
@@ -56,14 +70,19 @@ class QuickTile : TileService() {
 
     override fun onClick() {
         super.onClick()
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            startActivity(
+                Intent(this, ConfigActivity::class.java)
+            )
+            return
+        }
         ContextCompat.startForegroundService(
             this,
             Intent(this, TurnOffService::class.java)
         )
     }
-
-    private fun isBtOn(): Boolean {
-        return BluetoothAdapter.getDefaultAdapter()?.isEnabled ?: false
-    }
-
 }
